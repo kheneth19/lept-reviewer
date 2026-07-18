@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEPT 2026 Board Exam Reviewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #090d16;
+            --card-bg: rgba(17, 25, 40, 0.75);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --primary-glow: #7c4dff;
+            --secondary-glow: #00e5ff;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --success: #00e676;
+            --error: #ff1744;
+            --accent: #ffb300;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(120px);
+            opacity: 0.4;
+            animation: floatGlow 12s infinite alternate ease-in-out;
+        }
+
+        body::before {
+            background: var(--primary-glow);
+            top: 10%;
+            left: -5%;
+        }
+
+        body::after {
+            background: var(--secondary-glow);
+            bottom: 10%;
+            right: -5%;
+            animation-delay: 4s;
+        }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 40px) scale(1.3); }
+        }
+
+        .container {
+            max-width: 650px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 30%, var(--secondary-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .tab-container {
+            display: flex;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            padding: 0.35rem;
+            border-radius: 100px;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary-glow), #512da8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(124, 77, 255, 0.3);
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-item {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(16px);
+            padding: 0.75rem;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--secondary-glow);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.1rem;
+        }
+
+        .quiz-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(16px);
+            border-radius: 24px;
+            padding: 1.75rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            margin-bottom: 1.5rem;
+        }
+
+        .question-number {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--primary-glow);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .answer-reveal-btn {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(124, 77, 255, 0.2), rgba(0, 229, 255, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.1rem;
+            border-radius: 14px;
+            color: var(--text-main);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .answer-reveal-btn:hover {
+            border-color: var(--secondary-glow);
+            background: linear-gradient(135deg, rgba(124, 77, 255, 0.3), rgba(0, 229, 255, 0.2));
+        }
+
+        .solution-box {
+            margin-top: 1rem;
+            display: none;
+            animation: fadeIn 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .info-block {
+            padding: 1.25rem;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+        }
+
+        .info-block.correct-ans {
+            border-left: 4px solid var(--success);
+            background: rgba(0, 230, 118, 0.03);
+        }
+
+        .info-block.rationale-block {
+            border-left: 4px solid var(--accent);
+            background: rgba(255, 179, 0, 0.03);
+        }
+
+        .block-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.35rem;
+        }
+
+        .correct-ans .block-title { color: var(--success); }
+        .rationale-block .block-title { color: var(--accent); }
+
+        .block-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #cbd5e1;
+        }
+
+        .nav-controls {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 0.9rem;
+            border: 1px solid var(--card-border);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-main);
+            border-radius: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--secondary-glow);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #00b0ff, #00e5ff);
+            color: #000;
+            border: none;
+            font-weight: 700;
+        }
+
+        .nav-btn.primary:hover {
+            box-shadow: 0 4px 15px rgba(0, 229, 255, 0.4);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--card-border);
+            margin-top: auto;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>🚀 LEPT 2026 Core Reviewer</h1>
+            <p>Premium Interactive Board Exam Practice Studio</p>
+        </header>
+
+        <div class="tab-container">
+            <button class="tab-btn active" id="btn-gen" onclick="switchTab('general-education')">General Education</button>
+            <button class="tab-btn" id="btn-prof" onclick="switchTab('professional-education')">Professional Education</button>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value" id="stat-progress">1 / --</div>
+                <div class="stat-label">Progress</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="stat-reviewed">0</div>
+                <div class="stat-label">Reviewed Questions</div>
+            </div>
+        </div>
+
+        <div class="quiz-card">
+            <span class="question-number" id="q-number">Question --</span>
+            <div class="question-text" id="q-text">Loading question structure...</div>
+            
+            <button class="answer-reveal-btn" id="reveal-trigger" onclick="toggleSolution()">👁️ Show Answer & Rationale</button>
+
+            <div class="solution-box" id="solution-box">
+                <div class="info-block correct-ans">
+                    <div class="block-title">✅ Correct Answer</div>
+                    <div class="block-text" id="correct-text">--</div>
+                </div>
+                <div class="info-block rationale-block">
+                    <div class="block-title">💡 System Analysis & Rationale</div>
+                    <div class="block-text" id="rationale-text">--</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-controls">
+            <button class="nav-btn" id="prev-btn" onclick="navigateQuestion(-1)">◀ Prev</button>
+            <button class="nav-btn primary" id="next-btn" onclick="navigateQuestion(1)">Next ▶</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>⚡ Powered by Premium Glassmorphic Studio Engine • Works Offline</p>
+    </footer>
+
+    <script>
+        // ITO ANG DATABASE MO NA NAKA-SYNC SA DATI MONG PROPERTIES (id, question, answer, rationale)
+        const questionDatabase = {
+            'general-education': [
+                {
+                    id: 1,
+                    question: 'Which of the following is the primary purpose of formative assessment?',
+                    answer: 'To provide feedback during instruction for learning improvement',
+                    rationale: 'Formative assessment occurs DURING the learning process. It acts as a diagnostic system to identify learner struggles in real-time.'
+                },
+                {
+                    id: 2,
+                    question: 'Bloom\'s Taxonomy was revised in 2001 to replace "Evaluation" with which supreme term?',
+                    answer: 'Create',
+                    rationale: 'In the 2001 revision by Anderson and Krathwohl, nouns became verbs. "Creating" became the highest cognitive activity.'
+                },
+                {
+                    id: 3,
+                    question: 'In Jean Piaget\'s theory, what is the core cognitive characteristic of the preoperational stage (2-7 years)?',
+                    answer: 'Egocentrism and magical thinking',
+                    rationale: 'Preoperational children struggle to perceive points of view outside their own (egocentrism).'
+                }
+            ],
+            'professional-education': [
+                {
+                    id: 1,
+                    question: 'According to the Code of Ethics for Professional Teachers, what is the teacher’s primary duty to the state?',
+                    answer: 'To transmit the state’s cultural and national heritage and foster patriotism.',
+                    rationale: 'Teachers are trustees of the state and are mandated to instill love of country, civic duties, and national pride in their students.'
+                }
+            ]
+        };
+
+        let currentTab = 'general-education';
+        let currentIndex = 0;
+        let reviewedQuestions = new Set();
+        let isRevealed = false;
+
+        function displayQuestion() {
+            const currentList = questionDatabase[currentTab];
+            const q = currentList[currentIndex];
+
+            if (!q) return;
+
+            // Reset box visibility state
+            isRevealed = false;
+            document.getElementById('solution-box').style.display = 'none';
+            document.getElementById('reveal-trigger').innerText = '👁️ Show Answer & Rationale';
+
+            // Load texts securely
+            document.getElementById('q-number').innerText = `Question ${currentIndex + 1} of ${currentList.length}`;
+            document.getElementById('q-text').innerText = q.question;
+            document.getElementById('correct-text').innerText = q.answer;
+            document.getElementById('rationale-text').innerText = q.rationale;
+
+            // Add to reviewed list tracker
+            const uniqueKey = `${currentTab}-${q.id}`;
+            reviewedQuestions.add(uniqueKey);
+
+            updateDashboard();
+        }
+
+        function toggleSolution() {
+            const box = document.getElementById('solution-box');
+            const trigger = document.getElementById('reveal-trigger');
+            
+            if (!isRevealed) {
+                box.style.display = 'flex';
+                trigger.innerText = '🙈 Hide Solution';
+                isRevealed = true;
+            } else {
+                box.style.display = 'none';
+                trigger.innerText = '👁️ Show Answer & Rationale';
+                isRevealed = false;
+            }
+        }
+
+        function navigateQuestion(direction) {
+            const currentList = questionDatabase[currentTab];
+            currentIndex += direction;
+
+            if (currentIndex >= currentList.length) {
+                currentIndex = currentList.length - 1;
+                alert('🎉 Mahusay! Natapos mo na ang lahat ng mga katanungan sa section na ito.');
+                return;
+            }
+            if (currentIndex < 0) currentIndex = 0;
+
+            displayQuestion();
+        }
+
+        function switchTab(tabName) {
+            currentTab = tabName;
+            currentIndex = 0;
+
+            document.getElementById('btn-gen').classList.toggle('active', tabName === 'general-education');
+            document.getElementById('btn-prof').classList.toggle('active', tabName === 'professional-education');
+
+            displayQuestion();
+        }
+
+        function updateDashboard() {
+            const currentList =
